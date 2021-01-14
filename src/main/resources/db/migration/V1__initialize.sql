@@ -1,4 +1,10 @@
-create table products (id bigserial primary key, title VARCHAR(255), price int );
+create table products (
+    id              bigserial primary key,
+    title           VARCHAR(255),
+    price           int,
+    created_at      timestamp default current_timestamp,
+    modified_at     timestamp default current_timestamp
+);
 insert into products (title, price) values
 ('Milk', 40),
 ('Bread', 20),
