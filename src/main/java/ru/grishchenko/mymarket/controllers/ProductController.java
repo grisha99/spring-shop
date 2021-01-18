@@ -3,8 +3,11 @@ package ru.grishchenko.mymarket.controllers;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import ru.grishchenko.mymarket.dto.ProductDto;
+import ru.grishchenko.mymarket.exception_handling.ResourceNotFoundException;
+import ru.grishchenko.mymarket.repositories.specifications.ProductSpecification;
 import ru.grishchenko.mymarket.services.ProductService;
 
 
@@ -16,20 +19,11 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
-    public Page<ProductDto> getAllProducts(@RequestParam(required = false, name = "min_price") Integer minCost,
-                                           @RequestParam(required = false, name = "max_price") Integer maxCost,
+    public Page<ProductDto> getAllProducts(@RequestParam MultiValueMap<String, String> params,
                                            @RequestParam(defaultValue = "0", name = "page") Integer page,
-                                           @RequestParam(defaultValue = "5", name = "count") Integer count) {
-        if ((minCost != null) || maxCost != null) {
-            if (minCost == null) {
-                minCost = 0;
-            }
-            if (maxCost == null) {
-                maxCost = Integer.MAX_VALUE;
-            }
-            return productService.getProductByPrice(minCost, maxCost, page, count);
-        }
-        return productService.getProductPage(page, count);
+                                           @RequestParam(defaultValue = "3", name = "count") Integer count) {
+
+        return productService.getProductPage(ProductSpecification.build(params), page, count);
     }
 
     @PostMapping
@@ -45,7 +39,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ProductDto getProductById(@PathVariable Long id) {
-        return productService.getProductDtoById(id).get();
+        return productService.getProductDtoById(id).orElseThrow(() -> new ResourceNotFoundException("Product by ID: " + id + " not found"));
     }
 
 
