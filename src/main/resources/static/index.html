@@ -21,6 +21,10 @@
     <form novalidate ng-submit="fillTable()">
         <div class="form-group row">
             <div class="form-group col-md-3">
+                <label for="filterTitle">Название товара</label>
+                <input class="form-control" type="text" ng-model="filter.title" id="filterTitle">
+            </div>
+            <div class="form-group col-md-3">
                 <label for="filterMinPrice">Минимальная цена</label>
                 <input class="form-control" type="number" ng-model="filter.min_price" id="filterMinPrice">
             </div>
@@ -42,6 +46,7 @@
             <td>Название</td>
             <td>Цена</td>
             <td></td>
+            <td></td>
         </tr>
         </thead>
         <tbody>
@@ -49,6 +54,9 @@
             <td>{{p.id}}</td>
             <td>{{p.title}}</td>
             <td>{{p.price}}</td>
+            <td>
+                <button class="btn btn-primary" ng-click="addToCartById(p.id)">Добавить в корзину</button>
+            </td>
             <td>
                 <button class="btn btn-danger" ng-click="deleteProductById(p.id)">Удалить товар</button>
             </td>
@@ -79,6 +87,31 @@
             <button class="btn btn-success" type="submit">Сохранить</button>
         </div>
     </form>
+    <div class="container" ng-if="cartList.length > 0">
+    <h3>Корзина</h3>
+    <table class="table table-hover" cellpadding="0" cellspacing="0">
+        <thead>
+        <tr>
+<!--            <td>ID</td>-->
+            <td>Название</td>
+            <td>Цена</td>
+            <td></td>
+        </tr>
+        </thead>
+        <tbody>
+        <tr ng-repeat="p in cartList">
+<!--            <td>{{p.id}}</td>-->
+            <td>{{p.title}}</td>
+            <td>{{p.price}}</td>
+            <td>
+                <button class="btn btn-secondary" ng-click="removeFromCartByIndex($index)">Удалить из корзины</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+        <button class="btn btn-danger" ng-click="clearCart()">Очистить корзину</button>
+    </div>
 </div>
 </body>
 </html>
