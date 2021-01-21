@@ -8,6 +8,7 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
             url: contextPath + '/products',
             method: 'GET',
             params: {
+                title: $scope.filter ? $scope.filter.title : null,
                 min_price: $scope.filter ? $scope.filter.min_price : null,
                 max_price: $scope.filter ? $scope.filter.max_price : null,
                 page: $currentPage ? $currentPage : 0,
@@ -67,5 +68,46 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
         $scope.fillTable();
     };
 
+    $scope.fillCart = function() {
+        $http({
+            url: contextPath + '/cart',
+            method: 'GET',
+
+        }).then(function (response) {
+            $scope.cartList = response.data;
+        })
+    };
+
+    $scope.addToCartById = function (id) {
+        $http({
+            url: contextPath + '/cart/add/' + id,
+            method: 'GET',
+
+        }).then(function (response) {
+            $scope.fillCart();
+        })
+    };
+
+    $scope.removeFromCartByIndex = function (index) {
+        $http({
+            url: contextPath + '/cart/delete/' + index,
+            method: 'GET',
+
+        }).then(function (response) {
+            $scope.fillCart();
+        })
+    };
+
+    $scope.clearCart = function () {
+        $http({
+            url: contextPath + '/cart/clear',
+            method: 'GET',
+
+        }).then(function (response) {
+            $scope.fillCart();
+        })
+    };
+
     $scope.fillTable();
+    $scope.fillCart();
 });
