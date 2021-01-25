@@ -88,9 +88,19 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
         })
     };
 
-    $scope.removeFromCartByIndex = function (index) {
+    $scope.removeFromCartById = function (id) {
         $http({
-            url: contextPath + '/cart/delete/' + index,
+            url: contextPath + '/cart/delete/' + id,
+            method: 'GET',
+
+        }).then(function (response) {
+            $scope.fillCart();
+        })
+    };
+
+    $scope.removeAllFromCartById = function (id) {
+        $http({
+            url: contextPath + '/cart/delete/all/' + id,
             method: 'GET',
 
         }).then(function (response) {

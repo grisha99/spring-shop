@@ -39,6 +39,29 @@ public class Cart {
         recalculate();
     }
 
+    public void removeFromCart(Long id) {
+        for (OrderItem o : items) {
+            if (o.getProduct().getId().equals(id)) {
+                o.decrementQuantity();
+                if (o.getQuantity() <= 0) {
+                    items.remove(o);
+                }
+                recalculate();
+                return;
+            }
+        }
+    }
+
+    public void removeAllProductFromCartById(Long id) {
+        for (OrderItem o : items) {
+            if (o.getProduct().getId().equals(id)) {
+                items.remove(o);
+                recalculate();
+                return;
+            }
+        }
+    }
+
     public void clear() {
         items.clear();
         recalculate();
