@@ -19,6 +19,10 @@ public class ProductService {
     private final ProductRepository productRepository;
     private final ModelMapper modelMapper;
 
+    public Optional<Product> getProductById(Long id) {
+        return productRepository.findById(id);
+    }
+
     public Optional<ProductDto> getProductDtoById(Long id) {
         return productRepository.findById(id).map(ProductDto::new);
     }
