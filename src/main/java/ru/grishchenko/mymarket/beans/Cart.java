@@ -2,6 +2,8 @@ package ru.grishchenko.mymarket.beans;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import ru.grishchenko.mymarket.exception_handling.ResourceNotFoundException;
 import ru.grishchenko.mymarket.models.OrderItem;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
+@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
 @Data
 public class Cart {
     private final ProductService productService;
