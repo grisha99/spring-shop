@@ -99,24 +99,34 @@
             <td></td>
         </tr>
         </thead>
-        <tbody>
-        <tr ng-repeat="oi in cartList.items">
-<!--            <td>{{p.id}}</td>-->
-            <td>{{oi.productTitle}}</td>
-            <td>{{oi.quantity}}</td>
-            <td>{{oi.quantity + ' x ' + oi.pricePerProduct + ' = ' + oi.price}}</td>
-            <td>
-                <button class="btn btn-secondary" ng-click="removeFromCartByIndex($index)">Удалить из корзины</button>
-            </td>
-        </tr>
-        <tfooter>
+        <tfoot>
         <tr>
             <td>Итого</td>
             <td></td>
             <td>{{cartList.totalPrice}}</td>
             <td></td>
         </tr>
-        </tfooter>
+        </tfoot>
+        <tbody>
+        <tr ng-repeat="oi in cartList.items">
+<!--            <td>{{oi.id}}</td>-->
+            <td>{{oi.productTitle}}</td>
+            <td>
+                <div class="input-group md-3" style="width: 120px">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-secondary" type="button" ng-click="removeFromCartById(oi.id)">-</button>
+                    </div>
+                    <input readonly type="text" class="form-control" placeholder="" aria-label="" value="{{oi.quantity}}" aria-describedby="basic-addon1">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" ng-click="addToCartById(oi.id)">+</button>
+                    </div>
+                </div>
+            </td>
+            <td>{{oi.quantity + ' x ' + oi.pricePerProduct + ' = ' + oi.price}}</td>
+            <td>
+                <button class="btn btn-secondary" ng-click="removeAllFromCartById(oi.id)">Удалить из корзины</button>
+            </td>
+        </tr>
         </tbody>
     </table>
 
