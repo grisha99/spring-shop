@@ -1,10 +1,12 @@
 package ru.grishchenko.mymarket.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @NoArgsConstructor
 @Data
@@ -20,8 +22,7 @@ public class OrderItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
-    @JsonManagedReference
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "order_id")
     private Order orderOwner;
 
@@ -33,6 +34,14 @@ public class OrderItem {
 
     @Column(name = "price")
     private int price;
+
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     public OrderItem(Product product) {
         this.product = product;

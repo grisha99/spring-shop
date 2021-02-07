@@ -1,11 +1,14 @@
 package ru.grishchenko.mymarket.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import ru.grishchenko.mymarket.beans.Cart;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,16 +23,32 @@ public class Order {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "user_id")
-    Long user_id;
+    @ManyToOne
+    @JoinColumn(name = "owner_user_id")
+    private User user;
 
-    @JsonBackReference
+    @Column(name = "price")
+    private int price;
+
     @OneToMany(mappedBy = "orderOwner")
-    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @Cascade(org.hibernate.annotations.CascadeType.ALL)
     List<OrderItem> items;
 
-    public Order(Long user_id) {
-        this.user_id = user_id;
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    public Order(Cart cart, User user) {
+        this.user = user;
         items = new ArrayList<>();
+        this.price = cart.getTotalPrice();
+        cart.getItems().forEach(oi -> {
+            oi.setOrderOwner(this);
+            this.items.add(oi);
+        });
     }
 }
