@@ -1,5 +1,6 @@
 package ru.grishchenko.mymarket.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,6 +19,11 @@ public class OrderItem {
     @ManyToOne
     @JoinColumn(name = "product_id")
     private Product product;
+
+    @JsonManagedReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "order_id")
+    private Order orderOwner;
 
     @Column(name = "quantity")
     private int quantity;
