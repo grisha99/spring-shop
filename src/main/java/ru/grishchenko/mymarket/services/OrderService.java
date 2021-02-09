@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.grishchenko.mymarket.beans.Cart;
+import ru.grishchenko.mymarket.beans.DeliveryAddress;
 import ru.grishchenko.mymarket.models.Order;
 import ru.grishchenko.mymarket.models.User;
 import ru.grishchenko.mymarket.repositories.OrderRepository;
@@ -18,8 +19,9 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final Cart cart;
 
-    public Order createOrderFormCart(User user) {
+    public Order createOrderFormCart(User user, DeliveryAddress deliveryAddress) {
             Order newOrder = new Order(cart, user);
+            newOrder.setDelivery_addr(deliveryAddress.getAddress());
             orderRepository.save(newOrder);
             cart.clear();
             return newOrder;

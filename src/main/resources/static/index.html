@@ -29,6 +29,23 @@
             <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
             <p class="mt-5 mb-3 text-muted">© GeekBrains 2021</p>
         </form>
+        <form class="form-signin" ng-submit="tryToRegister()" style="max-width: 350px; padding: 15px; margin: 0 auto;">
+            <h1 class="h3 mb-3 font-weight-normal">Регистрация</h1>
+            <label for="regAlias" class="sr-only">Ваше ФИО</label>
+            <input type="text" ng-model="newUser.alias" id="regAlias" class="form-control"
+                   placeholder="Ваше ФИО" style="margin-bottom: 10px;" required="">
+            <label for="regUsername" class="sr-only">Имя пользователя</label>
+            <input type="text" ng-model="newUser.username" id="regUsername" class="form-control"
+                   placeholder="Имя пользователя" style="margin-bottom: 10px;" required="">
+            <label for="regPassword" class="sr-only">Пароль</label>
+            <input type="password" ng-model="newUser.password" id="regPassword" class="form-control" placeholder="Пароль"
+                   style="margin-bottom: 10px;" required="">
+            <label for="regEmail" class="sr-only">Email</label>
+            <input type="email" ng-model="newUser.email" id="regEmail" class="form-control" placeholder="Email"
+                   style="margin-bottom: 10px;" required="">
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Войти</button>
+            <p class="mt-5 mb-3 text-muted">© GeekBrains 2021</p>
+        </form>
     </div>
     <div ng-show="authorized">
         <p>Добро пожаловать: {{userInfo.alias}}</p>
@@ -71,6 +88,11 @@
                                     <td></td>
                                     <td>{{order.totalPrice}}</td>
                                     <td></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4">
+                                        Адрес доставки: {{order.delivery_addr}}
+                                    </td>
                                 </tr>
                                 </tfoot>
                                 <tbody>
@@ -158,7 +180,7 @@
                 <button class="btn btn-success" type="submit">Сохранить</button>
             </div>
         </form>
-        <div class="container" ng-if="cartList.items.length > 0">
+        <div class="container" ng-show="cartList.items.length > 0">
         <h3>Корзина</h3>
         <table class="table table-hover" cellpadding="0" cellspacing="0">
             <thead>
@@ -176,6 +198,21 @@
                 <td></td>
                 <td>{{cartList.totalPrice}}</td>
                 <td></td>
+            </tr>
+            <tr>
+                <td clospan="4">
+                    <form ng-submit="createOrder()">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">Адрес доставки:</span>
+                            </div>
+<!--                            <textarea id="orderDeliveryAddress" ng-model="orderDelivery.address" class="form-control" aria-label="Введите адрес доставки">{{cartList.delivery_addr}}</textarea>-->
+                            <input type="text" id="orderDeliveryAddress" ng-model="orderDelivery.address" class="form-control" aria-label="Введите адрес доставки" value="{{cartList.delivery_addr}}">
+                        </div>
+                        <button type="submit" class="btn btn-success">Оформить заказ</button>
+                        <button class="btn btn-danger" ng-click="clearCart()">Очистить корзину</button>
+                    </form>
+                </td>
             </tr>
             </tfoot>
             <tbody>
@@ -198,10 +235,10 @@
                     <button class="btn btn-secondary" ng-click="removeAllFromCartById(oi.id)">Удалить из корзины</button>
                 </td>
             </tr>
+
             </tbody>
         </table>
-            <button class="btn btn-success" ng-click="createOrder()">Оформить заказ</button>
-            <button class="btn btn-danger" ng-click="clearCart()">Очистить корзину</button>
+
         </div>
 </div>
 </div>

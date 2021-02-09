@@ -2,6 +2,7 @@ package ru.grishchenko.mymarket.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import ru.grishchenko.mymarket.beans.DeliveryAddress;
 import ru.grishchenko.mymarket.dto.OrderDto;
 import ru.grishchenko.mymarket.exception_handling.ResourceNotFoundException;
 import ru.grishchenko.mymarket.models.User;
@@ -10,7 +11,6 @@ import ru.grishchenko.mymarket.services.UserService;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -32,9 +32,9 @@ public class OrderController {
 //    }
 
     @PostMapping
-    public void addOrderFormCart(Principal principal) {
+    public void addOrderFormCart(@RequestBody DeliveryAddress deliveryAddress, Principal principal) {
         User user = userService.findByUsername(principal.getName()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        orderService.createOrderFormCart(user);
+        orderService.createOrderFormCart(user, deliveryAddress);
     }
 
 }

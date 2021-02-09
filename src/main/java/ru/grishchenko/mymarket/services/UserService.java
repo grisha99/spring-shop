@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.grishchenko.mymarket.configs.SecurityConfig;
+import ru.grishchenko.mymarket.dto.UserDto;
 import ru.grishchenko.mymarket.models.Role;
 import ru.grishchenko.mymarket.models.User;
 import ru.grishchenko.mymarket.repositories.UserRepository;
@@ -21,6 +23,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
+    private final RoleService roleService;
+    private final SecurityConfig securityConfig;
 
     public Optional<User> findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -43,5 +47,16 @@ public class UserService implements UserDetailsService {
 
     public Long getIdByUserName(String userName) {
         return findByUsername(userName).get().getId();
+    }
+
+    public void registerNewUser(UserDto userDto) {
+        userDto.setPassword(getPassHash(userDto.getPassword()));
+        User newUser = new User(userDto);
+        newUser.getRoles().add(roleService.getRoleForNewUser());
+        userRepository.save(newUser);
+    }
+
+    private String getPassHash(String pass) {
+        return securityConfig.passwordEncoder().encode(pass);
     }
 }

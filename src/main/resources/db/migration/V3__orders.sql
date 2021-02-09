@@ -2,6 +2,7 @@ create table orders (
     id                      bigserial primary key,
     owner_user_id           bigint references users (id),
     price                   bigint,
+    delivery_addr           varchar(255),
     created_at              timestamp default current_timestamp,
     updated_at              timestamp default current_timestamp
 );
