@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.grishchenko.mymarket.beans.JwtTokenUtil;
 import ru.grishchenko.mymarket.dto.JwtRequest;
 import ru.grishchenko.mymarket.dto.JwtResponse;
+import ru.grishchenko.mymarket.dto.UserDto;
 import ru.grishchenko.mymarket.dto.UserInfoDto;
 import ru.grishchenko.mymarket.exception_handling.MyMarketError;
 import ru.grishchenko.mymarket.services.UserService;
@@ -39,5 +40,17 @@ public class AuthController {
     @GetMapping("/alias")
     public UserInfoDto getUserName(Principal principal) {
         return new UserInfoDto(userService.getAliasByUserName(principal.getName()));
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<?> registerUser(@RequestBody UserDto userDto) {
+        try {
+            userService.registerNewUser(userDto);
+            return ResponseEntity.ok(HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(new MyMarketError(HttpStatus.BAD_REQUEST.value(), "Username or Email already exists"), HttpStatus.BAD_REQUEST);
+        }
+
+
     }
 }

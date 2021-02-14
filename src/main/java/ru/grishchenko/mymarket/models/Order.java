@@ -32,7 +32,10 @@ public class Order {
 
     @OneToMany(mappedBy = "orderOwner")
     @Cascade(org.hibernate.annotations.CascadeType.ALL)
-    List<OrderItem> items;
+    private List<OrderItem> items;
+
+    @Column(name = "delivery_addr")
+    private String delivery_addr;
 
     @CreationTimestamp
     @Column(name = "created_at")

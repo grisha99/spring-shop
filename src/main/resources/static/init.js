@@ -120,13 +120,13 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
     };
 
     $scope.createOrder = function () {
-        $http.post(apiPath + '/orders')
+        $http.post(apiPath + '/orders', this.orderDelivery)
             .then(function (response) {
-//                $scope.newProduct = null;
+//                $scope.orderDelivery = null;
                 $scope.fillOrders();
                 $scope.fillCart();
             });
-    };
+   };
 
     $scope.fillOrders = function () {
         $http.get(apiPath + '/orders')
@@ -148,6 +148,15 @@ angular.module('app', []).controller('indexController', function ($scope, $http)
                     $scope.fillOrders();
                     $scope.getUserAlias();
                 }
+            }, function errorCallback(response) {
+                window.alert("Error");
+            });
+    };
+
+    $scope.tryToRegister = function () {
+        $http.post(rootPath + '/auth/register', this.newUser)
+            .then(function successCallback(response) {
+                 window.alert("Вы зарегистрированы, авторизуйтесь.");
             }, function errorCallback(response) {
                 window.alert("Error");
             });
