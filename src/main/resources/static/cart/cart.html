@@ -1,0 +1,51 @@
+<h3>Корзина</h3>
+<p ng-show="cartList.items.length == 0">Ваша корзина пуста</p>
+<table ng-show="cartList.items.length > 0" class="table table-hover" cellpadding="0" cellspacing="0">
+    <thead>
+    <tr>
+        <!--            <td>ID</td>-->
+        <td>Название</td>
+        <td>Количество</td>
+        <td>Цена</td>
+        <td></td>
+    </tr>
+    </thead>
+    <tfoot>
+    <tr>
+        <td>Итого</td>
+        <td></td>
+        <td>{{cartList.totalPrice}}</td>
+        <td></td>
+    </tr>
+    <tr>
+        <td clospan="4">
+<!--                <button type="submit" class="btn btn-success">Оформить заказ</button>-->
+                <button ng-show="!isUserLoggedIn()" class="btn btn-primary" ng-click="goToOrderSubmit()">Перейти к оформлению заказа</button>
+                <button class="btn btn-danger" ng-click="clearCart()">Очистить корзину</button>
+
+        </td>
+    </tr>
+    </tfoot>
+    <tbody>
+    <tr ng-repeat="oi in cartList.items">
+        <!--            <td>{{oi.id}}</td>-->
+        <td>{{oi.productTitle}}</td>
+        <td>
+            <div class="input-group md-3" style="width: 120px">
+                <div class="input-group-prepend">
+                    <button class="btn btn-outline-secondary" type="button" ng-click="removeFromCartById(oi.id)">-</button>
+                </div>
+                <input readonly type="text" class="form-control" placeholder="" aria-label="" value="{{oi.quantity}}" aria-describedby="basic-addon1">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" ng-click="addToCartById(oi.id)">+</button>
+                </div>
+            </div>
+        </td>
+        <td>{{oi.quantity + ' x ' + oi.pricePerProduct + ' = ' + oi.price}}</td>
+        <td>
+            <button class="btn btn-secondary" ng-click="removeAllFromCartById(oi.id)">Удалить из корзины</button>
+        </td>
+    </tr>
+
+    </tbody>
+</table>

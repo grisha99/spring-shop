@@ -2,7 +2,6 @@ package ru.grishchenko.mymarket.controllers;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import ru.grishchenko.mymarket.beans.DeliveryAddress;
 import ru.grishchenko.mymarket.dto.OrderDto;
 import ru.grishchenko.mymarket.exception_handling.ResourceNotFoundException;
 import ru.grishchenko.mymarket.models.User;
@@ -26,15 +25,15 @@ public class OrderController {
         return orderService.findAllOrdersByOwnerName(principal.getName()).stream().map(OrderDto::new).collect(Collectors.toList());
     }
 
-//    @GetMapping("/{id}")
-//    public Optional<OrderDto> getOrders(@PathVariable Integer id, Principal principal) {
-//        return orderService.getOrderDto(id, principal);
-//    }
+    @GetMapping("/{id}")
+    public OrderDto getOrderDtoById(@PathVariable Long id, Principal principal) {
+        return orderService.findOrderDtoById(id, principal);
+    }
 
     @PostMapping
-    public void addOrderFormCart(@RequestBody DeliveryAddress deliveryAddress, Principal principal) {
+    public OrderDto addOrderFormCart(@RequestParam String address, Principal principal) {
         User user = userService.findByUsername(principal.getName()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        orderService.createOrderFormCart(user, deliveryAddress);
+        return new OrderDto(orderService.createOrderFormCart(user, address));
     }
 
 }
