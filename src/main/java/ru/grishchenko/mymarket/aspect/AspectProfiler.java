@@ -1,5 +1,6 @@
 package ru.grishchenko.mymarket.aspect;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
@@ -12,6 +13,7 @@ import java.util.Map;
 @Aspect
 @EnableAspectJAutoProxy
 @Component
+@Slf4j
 public class AspectProfiler {
 
     private final Map<String, Integer> methodMap = new HashMap<>();
@@ -35,7 +37,7 @@ public class AspectProfiler {
 
         //  при каждом вызове вычисляем метод вызванный большее кол-во раз
         Map.Entry<String, Integer> maxEntry = methodMap.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get();
-        System.out.println("Max use method: " + maxEntry.getKey() + "; Use count: " + maxEntry.getValue());
+        log.info("Max use method: " + maxEntry.getKey() + "; Use count: " + maxEntry.getValue());
     }
 
     @Around("controllersProfiler()")
@@ -49,7 +51,7 @@ public class AspectProfiler {
 
         //  нахоим метод выполняющийся дольше всех
         Map.Entry<String, Long> maxEntry = methodTimeMap.entrySet().stream().max((entry1, entry2) -> entry1.getValue() > entry2.getValue() ? 1 : -1).get();
-        System.out.println("Method longer time: " + maxEntry.getKey() + "; Time: " + maxEntry.getValue() + " ms");
+        log.info("Method longer time: " + maxEntry.getKey() + "; Time: " + maxEntry.getValue() + " ms");
         return result;
     }
 }
