@@ -10,6 +10,8 @@ import ru.grishchenko.mymarket.dto.ProductDto;
 import ru.grishchenko.mymarket.models.Product;
 import ru.grishchenko.mymarket.repositories.ProductRepository;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -32,6 +34,10 @@ public class ProductService {
 
     }
 
+    public List<Product> getAllProducts() {
+        return Collections.unmodifiableList(productRepository.findAll());
+    }
+
     public ProductDto saveOrUpdate(ProductDto productDto) {
         Product p = modelMapper.map(productDto, Product.class);
         return modelMapper.map(productRepository.save(p), ProductDto.class);
@@ -40,4 +46,5 @@ public class ProductService {
     public void deleteProductById(Long id) {
         productRepository.deleteById(id);
     }
+
 }
