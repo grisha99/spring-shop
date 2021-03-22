@@ -43,20 +43,11 @@ public class OrderItem {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-    public OrderItem(Product product) {
-        this.product = product;
-        this.quantity = 1;
-        this.pricePerProduct = product.getPrice();
-        this.price = this.pricePerProduct;
+    public OrderItem(CartItem cartItem) {
+        this.product = cartItem.getProduct();
+        this.quantity = cartItem.getQuantity();
+        this.pricePerProduct = cartItem.getPricePerProduct();
+        this.price = cartItem.getPrice();
     }
 
-    public void incrementQuantity() {
-        quantity++;
-        price = quantity * pricePerProduct;
-    }
-
-    public void decrementQuantity() {
-        quantity--;
-        price = quantity * pricePerProduct;
-    }
 }

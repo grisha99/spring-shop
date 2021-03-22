@@ -63,6 +63,15 @@
         if ($localStorage.currentUser) {
             $http.defaults.headers.common.Authorization = 'Bearer ' + $localStorage.currentUser.token;
         }
+//        if (!$localStorage.cartUUID) {
+            $http({
+                url: 'http://localhost:8189/market/api/v1/cart/new',
+                method: 'GET',
+
+            }).then(function (response) {
+                $localStorage.cartUUID = response.data;
+            })
+//        }
     }
 })();
 
@@ -114,7 +123,6 @@ angular.module('app').controller('indexController', function ($scope, $http, $lo
         $http.get(rootPath + '/auth/alias')
             .then(function (response) {
                 $scope.userInfo = response.data;
-//                $scope.fillTable();
             });
 
     }
