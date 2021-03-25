@@ -34,7 +34,11 @@ public class ProductController {
 
     @PutMapping
     public ProductDto modifiedProduct(@RequestBody ProductDto productDto) {
-        return productService.saveOrUpdate(productDto);
+        if (productDto.getId() != null) {
+            productService.getProductById(productDto.getId()).orElseThrow(() -> new ResourceNotFoundException("Product by ID: " + productDto.getId() + " not found"));
+            return productService.saveOrUpdate(productDto);
+        }
+        return addProduct(productDto);
     }
 
     @GetMapping("/{id}")

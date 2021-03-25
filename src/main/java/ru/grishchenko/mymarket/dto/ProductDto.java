@@ -8,7 +8,7 @@ import ru.grishchenko.mymarket.models.Product;
 @NoArgsConstructor
 public class ProductDto {
 
-    private long id;
+    private Long id;
     private String title;
     private Integer price;
 
