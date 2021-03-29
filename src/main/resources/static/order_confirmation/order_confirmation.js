@@ -1,9 +1,9 @@
-angular.module('app').controller('orderConfirmationController', function ($scope, $http, $location) {
+angular.module('app').controller('orderConfirmationController', function ($scope, $http, $location, $localStorage) {
     const apiPath = 'http://localhost:8189/market/api/v1';
 
     $scope.cartContentRequest = function () {
         $http({
-            url: apiPath + '/cart',
+            url: apiPath + '/cart/' + $localStorage.cartUUID,
             method: 'GET'
         }).then(function (response) {
             $scope.cartList = response.data;
@@ -12,7 +12,7 @@ angular.module('app').controller('orderConfirmationController', function ($scope
 
     $scope.submitOrder = function () {
         $http({
-            url: apiPath + '/orders',
+            url: apiPath + '/orders/' + $localStorage.cartUUID,
             method: 'POST',
             params: {
                 address: $scope.order_info.address

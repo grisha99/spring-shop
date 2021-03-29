@@ -1,9 +1,9 @@
-angular.module('app').controller('cartController', function ($scope, $http, $location) {
+angular.module('app').controller('cartController', function ($scope, $http, $location, $localStorage) {
     const apiPath = 'http://localhost:8189/market/api/v1';
 
     $scope.fillCart = function() {
         $http({
-            url: apiPath + '/cart',
+            url: apiPath + '/cart/' + $localStorage.cartUUID,
             method: 'GET',
 
         }).then(function (response) {
@@ -13,7 +13,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
 
     $scope.addToCartById = function (id) {
         $http({
-            url: apiPath + '/cart/add/' + id,
+            url: apiPath + '/cart/' + $localStorage.cartUUID + '/add/' + id,
             method: 'GET',
 
         }).then(function (response) {
@@ -23,7 +23,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
 
     $scope.removeFromCartById = function (id) {
         $http({
-            url: apiPath + '/cart/delete/' + id,
+            url: apiPath + '/cart/' + $localStorage.cartUUID + '/delete/' + id,
             method: 'GET',
 
         }).then(function (response) {
@@ -33,7 +33,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
 
     $scope.removeAllFromCartById = function (id) {
         $http({
-            url: apiPath + '/cart/delete/all/' + id,
+            url: apiPath + '/cart/' + $localStorage.cartUUID + '/delete/all/' + id,
             method: 'GET',
 
         }).then(function (response) {
@@ -43,7 +43,7 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
 
     $scope.clearCart = function () {
         $http({
-            url: apiPath + '/cart/clear',
+            url: apiPath + '/cart/' + $localStorage.cartUUID + '/clear',
             method: 'GET',
 
         }).then(function (response) {
@@ -52,21 +52,11 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
     };
 
     $scope.createOrder = function () {
-        $http.post(apiPath + '/orders', this.orderDelivery)
+        $http.post(apiPath + '/orders/' + $localStorage.cartUUID, this.orderDelivery)
             .then(function (response) {
-//                $scope.orderDelivery = null;
-//                $scope.fillOrders();
                 $scope.fillCart();
             });
     };
-
-    $scope.createOrder = function () {
-        $http.get(contextPath + '/api/v1/orders/create')
-            .then(function (response) {
-                $scope.showMyOrders();
-                $scope.showCart();
-            });
-    }
 
     $scope.goToOrderSubmit = function () {
         $location.path('/order_confirmation');

@@ -1,4 +1,4 @@
-angular.module('app').controller('productsController', function ($scope, $http) {
+angular.module('app').controller('productsController', function ($scope, $http, $localStorage) {
     const apiPath = 'http://localhost:8189/market/api/v1';
     // const rootPath = 'http://localhost:8189/market';
     let $currentPage=0;
@@ -71,11 +71,12 @@ angular.module('app').controller('productsController', function ($scope, $http) 
 
     $scope.addToCartById = function (id) {
         $http({
-            url: apiPath + '/cart/add/' + id,
+            // url: apiPath + '/cart/add/' + id,
+            url: apiPath + '/cart/' + $localStorage.cartUUID + '/add/' + id,
             method: 'GET',
 
         }).then(function (response) {
-            $scope.fillCart();
+            $scope.fillTable();
         })
     };
 

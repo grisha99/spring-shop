@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import ru.grishchenko.mymarket.beans.Cart;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -48,10 +47,11 @@ public class Order {
     public Order(Cart cart, User user) {
         this.user = user;
         items = new ArrayList<>();
-        this.price = cart.getTotalPrice();
-        cart.getItems().forEach(oi -> {
-            oi.setOrderOwner(this);
-            this.items.add(oi);
+        this.price = cart.getPrice();
+        cart.getItems().stream().map(OrderItem::new).forEach(oi -> {
+           oi.setOrderOwner(this);
+           this.items.add(oi);
         });
-    }
+    };
+//    }
 }

@@ -10,6 +10,7 @@ import ru.grishchenko.mymarket.services.UserService;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -30,10 +31,10 @@ public class OrderController {
         return orderService.findOrderDtoById(id, principal);
     }
 
-    @PostMapping
-    public OrderDto addOrderFormCart(@RequestParam String address, Principal principal) {
+    @PostMapping("/{uuid}")
+    public OrderDto addOrderFormCart(@PathVariable UUID uuid, @RequestParam String address, Principal principal) {
         User user = userService.findByUsername(principal.getName()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
-        return new OrderDto(orderService.createOrderFormCart(user, address));
+        return new OrderDto(orderService.createOrderFormCart(user, address, uuid));
     }
 
 }
