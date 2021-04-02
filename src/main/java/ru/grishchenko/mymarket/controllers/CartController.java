@@ -2,13 +2,11 @@ package ru.grishchenko.mymarket.controllers;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.grishchenko.mymarket.dto.CartDto;
 import ru.grishchenko.mymarket.services.CartService;
 
+import java.security.Principal;
 import java.util.UUID;
 
 @RestController
@@ -18,6 +16,14 @@ import java.util.UUID;
 public class CartController {
 
     private final CartService cartService;
+
+    @PostMapping
+    public UUID getNewUUIDCart(Principal principal) {
+        if (principal == null) {
+            return cartService.getCartForUser(null, null);
+        }
+        return cartService.getCartForUser(principal.getName(), null);
+    }
 
     @GetMapping("{uuid}")
     public CartDto getCartDto(@PathVariable UUID uuid) {
@@ -47,9 +53,6 @@ public class CartController {
         cartService.clear(uuid);
     }
 
-    @GetMapping("/new")
-    public UUID getNewUUIDCart() {
-        return cartService.getNewCart().getId();
-    }
+
 
 }

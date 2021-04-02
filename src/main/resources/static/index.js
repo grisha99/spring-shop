@@ -65,8 +65,8 @@
         }
 //        if (!$localStorage.cartUUID) {
             $http({
-                url: 'http://localhost:8189/market/api/v1/cart/new',
-                method: 'GET',
+                url: 'http://localhost:8189/market/api/v1/cart',
+                method: 'POST',
 
             }).then(function (response) {
                 $localStorage.cartUUID = response.data;
@@ -75,11 +75,14 @@
     }
 })();
 
-angular.module('app').controller('indexController', function ($scope, $http, $localStorage) {
+angular.module('app').controller('indexController', function ($scope, $rootScope, $http, $localStorage) {
     const contextPath = 'http://localhost:8189/market';
     const rootPath = 'http://localhost:8189/market';
 
     $scope.tryToAuth = function () {
+
+        $scope.user.cartUuid = $localStorage.cartUUID;
+
         $http.post(contextPath + '/auth', $scope.user)
             .then(function successCallback(response) {
                 if (response.data.token) {
@@ -91,6 +94,10 @@ angular.module('app').controller('indexController', function ($scope, $http, $lo
 
                     $scope.user.username = null;
                     $scope.user.password = null;
+
+                    $rootScope.$broadcast('logInOut', {
+                        upUUID: $localStorage.cartUUID // посылайте что хотите
+                    });
                 }
             }, function errorCallback(response) {
             });
@@ -98,12 +105,26 @@ angular.module('app').controller('indexController', function ($scope, $http, $lo
 
     $scope.tryToLogout = function () {
         $scope.clearUser();
+
         if ($scope.user.username) {
             $scope.user.username = null;
         }
         if ($scope.user.password) {
             $scope.user.password = null;
         }
+
+        $http({
+            url: 'http://localhost:8189/market/api/v1/cart',
+            method: 'POST',
+
+        }).then(function (response) {
+            $localStorage.cartUUID = response.data;
+            $rootScope.$broadcast('logInOut', {
+                upUUID: $localStorage.cartUUID // посылайте что хотите
+            });
+        })
+
+
     };
 
     $scope.clearUser = function () {

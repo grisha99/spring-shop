@@ -56,6 +56,11 @@ public class CartItem {
         price = quantity * pricePerProduct;
     }
 
+    public void incrementQuantity(int amount) {
+        quantity += amount;
+        price = quantity * pricePerProduct;
+    }
+
     public void decrementQuantity() {
         quantity--;
         price = quantity * pricePerProduct;
