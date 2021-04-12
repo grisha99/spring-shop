@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.grishchenko.mymarket.exception_handling.ResourceNotFoundException;
-import ru.grishchenko.mymarket.models.Cart;
-import ru.grishchenko.mymarket.models.CartItem;
-import ru.grishchenko.mymarket.models.OrderItem;
-import ru.grishchenko.mymarket.models.Product;
+import ru.grishchenko.mymarket.models.*;
 import ru.grishchenko.mymarket.repositories.CartRepository;
 
 import java.util.Iterator;
@@ -20,6 +17,7 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final ProductService productService;
+    private final UserService userService;
 
     public Cart save(Cart cart) {
         return cartRepository.save(cart);
@@ -27,6 +25,10 @@ public class CartService {
 
     public Optional<Cart> findById(UUID id) {
         return cartRepository.findById(id);
+    }
+
+    public Optional<Cart> findByUserId(Long userId) {
+        return cartRepository.findByUserId(userId);
     }
 
     @Transactional
@@ -90,5 +92,32 @@ public class CartService {
 
     public Cart getNewCart() {
         return cartRepository.save(new Cart());
+    }
+
+    @Transactional
+    public UUID getCartForUser(String username, UUID cartUuid) {
+        if (username != null && cartUuid != null) {
+            User user = userService.findByUsername(username).get();
+            Cart cart = findById(cartUuid).get();
+            Optional<Cart> oldCart = findByUserId(user.getId());
+            if (oldCart.isPresent()) {
+                cart.merge(oldCart.get());
+                cartRepository.delete(oldCart.get());
+            }
+            cart.setUser(user);
+        }
+        if (username == null) {
+            Cart cart = save(new Cart());
+            return cart.getId();
+        }
+        User user = userService.findByUsername(username).get();
+        Optional<Cart> cart = findByUserId(user.getId());
+        if (cart.isPresent()) {
+            return cart.get().getId();
+        }
+        Cart newCart = new Cart();
+        newCart.setUser(user);
+        save(newCart);
+        return newCart.getId();
     }
 }

@@ -1,5 +1,6 @@
 create table carts (
     id                      UUID primary key,
+    owner_id                bigint references users (id),
     price                   int
 );
 

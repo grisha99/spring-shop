@@ -14,6 +14,7 @@ import ru.grishchenko.mymarket.dto.JwtResponse;
 import ru.grishchenko.mymarket.dto.UserDto;
 import ru.grishchenko.mymarket.dto.UserInfoDto;
 import ru.grishchenko.mymarket.exception_handling.MyMarketError;
+import ru.grishchenko.mymarket.services.CartService;
 import ru.grishchenko.mymarket.services.UserService;
 
 import java.security.Principal;
@@ -22,6 +23,8 @@ import java.security.Principal;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
+    private final CartService cartService;
     private final UserService userService;
     private final JwtTokenUtil jwtTokenUtil;
     private final AuthenticationManager authenticationManager;
@@ -35,6 +38,9 @@ public class AuthController {
         }
         UserDetails userDetails = userService.loadUserByUsername(authRequest.getUsername());
         String token = jwtTokenUtil.generateToken(userDetails);
+
+        cartService.getCartForUser(authRequest.getUsername(), authRequest.getCartUuid());
+
         return ResponseEntity.ok(new JwtResponse(token));
     }
     @GetMapping("/alias")

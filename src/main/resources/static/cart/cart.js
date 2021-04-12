@@ -1,6 +1,8 @@
 angular.module('app').controller('cartController', function ($scope, $http, $location, $localStorage) {
     const apiPath = 'http://localhost:8189/market/api/v1';
 
+
+
     $scope.fillCart = function() {
         $http({
             url: apiPath + '/cart/' + $localStorage.cartUUID,
@@ -10,6 +12,10 @@ angular.module('app').controller('cartController', function ($scope, $http, $loc
             $scope.cartList = response.data;
         })
     };
+
+    $scope.$on('logInOut', function (event, data) {
+        $scope.fillCart();
+    });
 
     $scope.addToCartById = function (id) {
         $http({
