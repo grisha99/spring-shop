@@ -5,4 +5,6 @@ import ru.grishchenko.mymarket.models.Role;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
+    
+    
 }
